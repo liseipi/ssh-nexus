@@ -562,6 +562,7 @@ function openModal(conn = null) {
   $('#conn-password').value = conn?.password || '';
   $('#conn-private-key').value = conn?.privateKeyPath || '~/.ssh/id_rsa';
   $('#conn-passphrase').value = conn?.passphrase || '';
+  $('#conn-keepalive').value = conn?.keepAliveSeconds ?? 300;
   $('#conn-remark').value = conn?.remark || '';
   populateGroupSelect();
   if (conn?.group) $('#conn-group').value = conn.group;
@@ -593,6 +594,7 @@ async function saveConnection() {
     privateKeyPath: authType === 'privateKey' ? $('#conn-private-key').value : undefined,
     passphrase: authType === 'privateKey' ? $('#conn-passphrase').value : undefined,
     group: $('#conn-group').value, remark: $('#conn-remark').value.trim(),
+    keepAliveSeconds: parseInt($('#conn-keepalive').value) || 300,
     jumpHost: jumpHost ? { host: jumpHost, port: parseInt($('#jump-port').value)||22, username: $('#jump-username').value.trim(), password: $('#jump-password').value } : null,
   };
   const saved = await window.electron.connections.save(conn);

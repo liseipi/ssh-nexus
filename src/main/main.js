@@ -188,6 +188,11 @@ function buildAuthConfig(conn) {
     try { cfg.privateKey = fs.readFileSync(conn.privateKeyPath.replace('~', os.homedir())); } catch(e) {}
     if (conn.passphrase) cfg.passphrase = conn.passphrase;
   }
+  const keepAlive = conn.keepAliveSeconds ?? 300;
+  if (keepAlive > 0) {
+    cfg.keepaliveInterval = keepAlive * 1000;
+    cfg.keepaliveCountMax = 3;
+  }
   return cfg;
 }
 
