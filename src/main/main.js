@@ -40,6 +40,14 @@ function createWindow() {
   mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'));
   mainWindow.once('ready-to-show', () => mainWindow.show());
   if (process.argv.includes('--dev')) mainWindow.webContents.openDevTools();
+
+  // macOS 系统关闭按钮（红绿灯）拦截：隐藏而非销毁
+  mainWindow.on('close', (e) => {
+    if (process.platform === 'darwin') {
+      e.preventDefault();
+      mainWindow.hide();
+    }
+  });
 }
 app.whenReady().then(createWindow);
 app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });
