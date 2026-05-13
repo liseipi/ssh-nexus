@@ -88,10 +88,29 @@ ssh-nexus/
 npm run build:mac
 
 #解决“包含恶意软件”问题
-sudo xattr -rd com.apple.quarantine "dist/mac/SSH Nexus.app"
 
-#用 Control + 右键 方式打开
-#右键 dist/mac/SSH Nexus.app → 按住 Control 键 → 点击 打开 → 再点 打开。
+# 清理旧的构建产物
+rm -rf dist/
+
+# 重新打包（这会生成全新的 .app）
+npm run build  # 或者你用的打包命令，比如 npm run dist
+
+# 进入新生成的目录
+cd dist/mac/
+
+#这个命令会告诉你应用是否被正确签名，以及签名里包含了哪些关键信息。
+codesign -dv --verbose=4 "SSH Nexus.app"
+#这个命令模拟了 macOS 在你打开应用时进行的检查，它会直接告诉我们系统为什么拒绝。
+spctl --assess --verbose=4 --type execute "SSH Nexus.app"
+
+# 移除隔离属性
+sudo xattr -cr "SSH Nexus.app"
+
+# 再次执行 ad-hoc 签名
+codesign --force --deep --sign - "SSH Nexus.app"
+
+# 验证签名状态（应该看到 Source=Unavailable 或 ad-hoc）
+codesign -dv "SSH Nexus.app"
 ```
 
 ---
@@ -125,16 +144,3 @@ sudo xattr -rd com.apple.quarantine "dist/mac/SSH Nexus.app"
 | `Esc` | 关闭弹窗 |
 
 ---
-
-## 扩展建议
-
-后续可以添加的功能：
-
-- [ ] SFTP 文件传输
-- [ ] 终端日志记录
-- [ ] 多窗口分屏
-- [ ] 命令片段管理（Snippets）
-- [ ] 主题切换
-- [ ] 连接分享/导入导出
-- [ ] 自动重连
-- [ ] SSH Tunnel / 端口转发
