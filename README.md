@@ -83,6 +83,17 @@ ssh-nexus/
 └── README.md
 ```
 
+```shell
+#打包
+npm run build:mac
+
+#解决“包含恶意软件”问题
+sudo xattr -rd com.apple.quarantine "dist/mac/SSH Nexus.app"
+
+#用 Control + 右键 方式打开
+#右键 dist/mac/SSH Nexus.app → 按住 Control 键 → 点击 打开 → 再点 打开。
+```
+
 ---
 
 ## 使用说明
