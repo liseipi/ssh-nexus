@@ -43,12 +43,24 @@ function createWindow() {
 }
 app.whenReady().then(createWindow);
 app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });
-app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow(); });
+app.on('activate', () => {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.show();
+  } else {
+    createWindow();
+  }
+});
 
 // 窗口控制
 ipcMain.handle('window:minimize', () => mainWindow.minimize());
 ipcMain.handle('window:maximize', () => { mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize(); });
-ipcMain.handle('window:close', () => mainWindow.close());
+ipcMain.handle('window:close', () => {
+  if (process.platform === 'darwin') {
+    mainWindow.hide();
+  } else {
+    mainWindow.minimize();
+  }
+});
 
 // 连接 CRUD
 ipcMain.handle('connections:getAll', () => store.get('connections'));
