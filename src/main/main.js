@@ -30,6 +30,8 @@ const store = new Store({
 });
 
 let mainWindow;
+let forceQuitting = false;
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1400, height: 900, minWidth: 900, minHeight: 600,
@@ -43,12 +45,14 @@ function createWindow() {
 
   // macOS 系统关闭按钮（红绿灯）拦截：隐藏而非销毁
   mainWindow.on('close', (e) => {
-    if (process.platform === 'darwin') {
+    if (process.platform === 'darwin' && !forceQuitting) {
       e.preventDefault();
       mainWindow.hide();
     }
   });
 }
+
+app.on('before-quit', () => { forceQuitting = true; });
 app.whenReady().then(createWindow);
 app.on('window-all-closed', () => { if (process.platform !== 'darwin') app.quit(); });
 app.on('activate', () => {
