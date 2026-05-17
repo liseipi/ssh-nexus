@@ -4,7 +4,7 @@
 
 ---
 
-<img src="ssh-nexus/public/main.png" height="450" alt="main" />
+<img src="public/main.png" height="450" alt="main" />
 
 ## 技术架构
 
