@@ -1,6 +1,9 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electron', {
+  // 平台信息
+  platform: process.platform,
+
   // 窗口控制
   window: {
     minimize: () => ipcRenderer.invoke('window:minimize'),

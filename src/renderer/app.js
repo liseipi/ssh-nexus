@@ -26,6 +26,8 @@ const $ = (s) => document.querySelector(s);
 
 // ── 初始化 ───────────────────────────────────────
 async function init() {
+  document.documentElement.setAttribute('data-platform', window.electron.platform);
+
   State.connections = await window.electron.connections.getAll();
   State.groups      = await window.electron.groups.getAll();
   State.settings    = await window.electron.settings.get();
